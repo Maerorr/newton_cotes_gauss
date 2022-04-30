@@ -1,13 +1,13 @@
 use std::mem::swap;
 
-use crate::{Function, functions::function_value};
+use crate::{Function, functions::{function_value, weight}};
 
 fn newton_cotes_iteration(f: Function, a: f64, b: f64) -> f64 {
     let h = (b - a) / 2. as f64;
     let mut sum = 0.;
-    sum += function_value(a, f);
-    sum += 4.*function_value(a+h, f);
-    sum += function_value(b, f);
+    sum += function_value(a, f) * weight(a);
+    sum += 4.*function_value(a+h, f) * weight(a+h);
+    sum += function_value(b, f) * weight(a+h);
 
     sum * h / 3.
 }

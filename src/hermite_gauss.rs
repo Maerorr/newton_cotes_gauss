@@ -1,12 +1,22 @@
-use std::mem::swap;
+use crate::{
+    functions::{self, function_value, hermite_poly, hermite_root, proper_weight, weight},
+    Function,
+};
 
-use crate::{Function, functions::{function_value, weight, hermite_root, hermite_poly, proper_weight}};
-
-pub fn hermite_gauss(f: Function, n: usize) -> f64 {
+/// returns hermite-gauss integration, last argument is which weight the function uses
+pub fn hermite_gauss(f: Function, n: usize, proper_weight: bool) -> f64 {
     let mut sum = 0.;
 
     for i in 0..n {
-        sum += function_value(hermite_root(n, i), f) * proper_weight(hermite_root(n, i), n);
+        match proper_weight {
+            true => {
+                sum += function_value(hermite_root(n, i), f)
+                    * functions::proper_weight(hermite_root(n, i), n);
+            }
+            false => {
+                sum += function_value(hermite_root(n, i), f) * weight(hermite_root(n, i));
+            }
+        }
     }
 
     sum

@@ -34,12 +34,12 @@ pub fn mixed(x: f64) -> f64 {
 
 pub fn function_value(x: f64, func: Function) -> f64 {
     match func {
-        Function::Poly1 => polynomial1(x),
-        Function::Poly2 => polynomial2(x),
-        Function::Linear => linear(x),
-        Function::Sinusoidal => sinusoidal(x),
-        Function::Absolute => absolute(x),
-        Function::Mixed => mixed(x),
+        Function::Poly1 => polynomial1(x)*weight(x),
+        Function::Poly2 => polynomial2(x)*weight(x),
+        Function::Linear => linear(x)*weight(x),
+        Function::Sinusoidal => sinusoidal(x)*weight(x),
+        Function::Absolute => absolute(x)*weight(x),
+        Function::Mixed => mixed(x)*weight(x),
     }
 }
 
@@ -106,6 +106,13 @@ pub fn factorial(n: usize) -> f64 {
 }
 
 /// CALCULATES THE "PROPER" WEIGHT THAT RETURNS ACTUAL VALUES
+///
+/// !!!!!!!!!!!!!!!!!!!!!!
+///
+/// for n = 2, it divides by 0 and returns inf.
+///
+/// !!!!!!!!!!!!!!!!!!!!!!
+///
 pub fn proper_weight(x: f64, n: usize) -> f64 {
     let mut two: f64 = 2.;
     (two.powf((n - 1) as f64) * factorial(n) * PI.sqrt())
