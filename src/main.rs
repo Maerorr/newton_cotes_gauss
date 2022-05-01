@@ -1,15 +1,9 @@
 use crate::hermite_gauss::hermite_gauss;
 use eframe::{
-    egui::{
-        self,
-        plot::{Line, Plot, PlotImage, PlotUi, Points, VLine, Value, Values},
-        Image, Layout, CentralPanel,
-    },
-    epaint::{vec2, Color32, TextureId},
+    egui::{self, CentralPanel, Layout},
     epi::App,
     run_native,
 };
-use functions::{function_value, weight};
 use newton_cotes::newton_cotes;
 
 mod functions;
@@ -34,13 +28,11 @@ struct AppState {
     function: Function,
     eps: f64,
     output_text: String,
-    plot_left: Vec<Value>,
-    plot_middle: Vec<Value>,
-    plot_right: Vec<Value>,
     gauss_nodes: usize,
     gauss_proper_weight: bool,
 }
 
+#[allow(dead_code)]
 impl AppState {
     fn new() -> AppState {
         AppState {
@@ -49,9 +41,6 @@ impl AppState {
             function: Function::Poly1,
             eps: 0.001,
             output_text: String::new(),
-            plot_left: vec![Value::new(0., 0.)],
-            plot_middle: vec![Value::new(0., 0.)],
-            plot_right: vec![Value::new(0., 0.)],
             left_not_plot: -2.,
             right_not_plot: 2.,
             gauss_nodes: 3,
@@ -68,7 +57,7 @@ impl AppState {
 }
 
 impl App for AppState {
-    fn update(&mut self, ctx: &egui::Context, frame: &eframe::epi::Frame) {
+    fn update(&mut self, ctx: &egui::Context, _frame: &eframe::epi::Frame) {
         ctx.set_pixels_per_point(1.5);
         CentralPanel::default().show(ctx, |ui| {
             ui.heading("Numerical Integration");
@@ -106,9 +95,7 @@ impl App for AppState {
                     ui.add_space(20.);
                     ui.horizontal(|ui| {
                         ui.label("No. of Nodes:");
-                        ui.add(
-                            egui::Slider::new(&mut self.gauss_nodes, 2..=6)
-                        );
+                        ui.add(egui::Slider::new(&mut self.gauss_nodes, 2..=6));
                     });
                     ui.with_layout(Layout::top_down(egui::Align::LEFT), |ui| {
                         ui.add_space(15.);

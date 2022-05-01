@@ -1,5 +1,5 @@
 use crate::{
-    functions::{self, function_value, hermite_poly, hermite_root, proper_weight, weight},
+    functions::{function_value, hermite_root, weight, hermite_weights},
     Function,
 };
 
@@ -10,11 +10,10 @@ pub fn hermite_gauss(f: Function, n: usize, proper_weight: bool) -> f64 {
     for i in 0..n {
         match proper_weight {
             true => {
-                sum += function_value(hermite_root(n, i), f)
-                    * functions::proper_weight(hermite_root(n, i), n);
+                sum += function_value(hermite_root(n, i), f, false) * hermite_weights(n, i);
             }
             false => {
-                sum += function_value(hermite_root(n, i), f) * weight(hermite_root(n, i));
+                sum += function_value(hermite_root(n, i), f, false) * weight(hermite_root(n, i));
             }
         }
     }
